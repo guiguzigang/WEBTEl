@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>接口</title>
+	<script src="interface.js"></script>
+</head>
+<body>
+	<script>
+		var Walkable = new Interface("Walkable", ["walk"]);
+		var Fightable = new Interface("Fightable", ["fight", "kill"]);
+		var Knight = function(name) {
+			this.name = name;
+		};
+		Knight.prototype.walk = function(){
+			alert(this.name + " is walking!");
+		};
+		Knight.prototype.fight = function() {
+			alert(this.name + " is fighting!");
+		};
+		Knight.prototype.kill = function() {
+			alert(this.name + " is killing!");
+		};
+		var k = new Knight("悟空");
+		function addKnight(knight){
+			Interface.checkImplements(knight, Walkable, Fightable);
+			k.fight();
+		}
+
+		addKnight(k);
+	</script>
+</body>
+</html>

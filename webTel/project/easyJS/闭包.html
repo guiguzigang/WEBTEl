@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>闭包</title>
+</head>
+<body>
+<script>
+    /* // 实现累加
+    function box(){
+        var age = 100;
+        return function(){
+            age++;
+            return age;
+        };
+    }
+    var b = box();
+    alert(b());
+    alert(b());
+    alert(b());
+    alert(b());
+    b = null;  // 解除引用，等待垃圾回收
+    alert(b());
+
+
+     function box() {
+     var arr = [];
+
+     for (var i = 0; i < 5; i ++) {
+     arr[i] = function (num) {
+     return function () {				//因为闭包可以将变量驻留在内存中，和上一节课的累加是一个道理
+     return num;
+     }
+     }(i);
+     }
+
+     //已经执行完毕了，num为什么可以0,1,2,3,4
+
+     return arr;
+     }
+*/
+    /*
+    this 作用域
+    var user = 'The Window';
+
+    var box = {
+        user : 'The Box',
+        getUser : function () {
+            //这里作用域的this是Box
+            var that = this;
+            return function () {
+                //这里作用域的this是window     闭包在执行时指向的是window
+                return that.user;
+            }
+        }
+    };
+
+    //alert(box.getUser()());
+    //对象冒充
+    //alert(box.getUser().call(box));
+    alert(box.getUser()());
+    */
+/*
+    (function () {
+        var user = '';
+        //使用了 prototype 导致方法共享了，而 user 也就变成静态属性了。(所谓静态属性，即共享于不同对象中的属性)
+        //采用的是 Person = function () {} 而不是 function Person() {} 因为如果用后面这种，就变成私有函数了，无法在全局访问到了
+        Person = function (value) {
+            user = value;
+        };
+        Person.prototype.getUser = function () {
+            return user;
+        };
+        Person.prototype.setUser = function (value) {
+            user = value;
+        }
+    })();
+  */
+
+
+    //私有化变量和函数：
+   /* var box = function () {
+        var age = 100;
+        function run() {
+            return '运行中...';
+        }
+        return { //直接返回对象
+            go : function () {
+                return age + run();
+            }
+        };
+    }();
+
+    alert(box.go());
+
+
+
+    上面的直接返回对象的例子，也可以这么写：
+    var box = function () {
+    var age = 100;
+    function run() {
+    return '运行中...';
+    }
+    var obj = { //创建字面量对象
+    go : function () {
+    return age + run();
+    }
+    };
+    return obj; //返回这个对象
+    }();
+
+
+    //增强的模块模式，这种模式适合返回自定义对象，也就是构造函数。
+    function Desk() {};
+    var box = function () {
+        var age = 100;
+        function run() {
+             return '运行中...';
+        }
+        var desk = new Desk(); //可以实例化特定的对象
+        desk.go = function () {
+            return age + run();
+        };
+        return desk;
+    }();
+    alert(box.go());
+
+    */
+
+    window.find();
+</script>
+</body>
+</html>

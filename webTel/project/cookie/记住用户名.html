@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#div1 {width:100px; height:100px; background:red; position:absolute;}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>封装拖拽</title>
+<script src="../jquery-1.8.3.min.js"></script>
+<script>
+	
+	function setCookie(name, value, expires){
+		var date = new Date();
+		date = expires == null ? "" : date.setDate(date.getDate() + expires);
+		document.cookie = name + '=' + value + ';expires=' + date;
+	}
+	function getCookie(name){
+		var arr = document.cookie.split('; ');
+		var i = 0;
+		var a = [];
+		for(i=0; i<arr.length; i++){
+			a = arr[i].split('=');
+			if(a[0] == name){
+				return a[1];
+			}
+		}
+		return '';
+	}
+	function removeCookie(name){
+		setCookie(name, '', -1);
+	}
+	
+	$(function(){
+		$('#form1').on("submit", function(){
+			setCookie('user', $('input[type="text"]').val(), 1);
+		});
+		$('input[type="text"]').val(getCookie('user'));
+		$('a').on('click', function(){
+			removeCookie("user");
+			$('input[type="text"]').val('');
+		});
+		
+	});
+	
+</script>
+</head>
+
+<body>
+	<form id="form1" action="http://www.miaov.com/">
+		用户名：<input type="text" name="user" />
+		密码：<input type="password" name="pass" />
+		<input type="submit" value="登录" />
+		<a href="javascript:;">清除记录</a>
+	</form>
+</body>
+</html>

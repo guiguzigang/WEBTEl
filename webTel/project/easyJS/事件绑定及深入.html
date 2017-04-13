@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件绑定及深入</title>
+</head>
+<body>
+<script>
+
+   /* // 解决存在多个window.onload 时，后面的window.onload覆盖上一个window.onload();
+    window.onload = function () {
+        alert('Lee');
+    };
+
+    if (typeof window.onload == 'function') {
+        var saved = null;			//保存上一个事件对象
+        saved = window.onload;
+    }
+
+    //saved就是window.onload，saved()相当于window.onload()，但是window.onload()不能执行的
+    //所以saved()相当于window.onload = function () {}
+
+    window.onload = function () {
+        if (saved) saved();						//执行上一个事件.window.onload = function () {}
+        alert('Mr.Lee');				//执行本事件
+    };*/
+
+
+
+    function addEvent(obj, type, fn) { //取代传统事件处理函数
+        var saved = null; //保存每次触发的事件处理函数
+        if (typeof obj['on' + type] == 'function') { //判断是不是事件
+            saved = obj['on' + type]; //如果有，保存起来
+        }
+        obj['on' + type] = function () { //然后执行
+            if (saved) saved(); //执行上一个
+            fn.call(this); //执行函数，把 this 传递过去
+        };
+    }
+
+
+
+   //兼容事件切换器，我们可以写成如下方式：
+   function addEvent(obj, type, fn) { //添加事件兼容
+       if (obj.addEventListener) {
+           obj.addEventListener(type, fn);
+       } else if (obj.attachEvent) {
+           obj.attachEvent('on' + type, function(){
+               fn.call(obj)
+           });
+       }
+   }
+   function removeEvent(obj, type, fn) { //移除事件兼容
+       if (obj.removeEventListener) {
+           obj.removeEventListener(type, fn);
+       } else if (obj.detachEvent) {
+           obj.detachEvent('on' + type, fn);
+       }
+   }
+   function getTarget(evt) { //得到事件目标
+       if (evt.target) {
+           return evt.target;
+       } else if (window.event.srcElement) {
+           return window.event.srcElement;
+       }
+   }
+   //获取从哪里移入和从哪里移出的最近的 DOM 对象。
+    function getElement(evt){
+        var e = evt || window.event;             //得到事件对象
+        if(e.srcElement){                        //如果支持 srcElement，表示 IE
+            if(e.type == 'mouseover'){           //如果是 over
+                return e.fromElement;           //就使用 from
+            }else if(e.type == 'mouseout'){     //如果是 out
+                return e.toElement;             //就使用 to
+            }
+        }else if(e.relatedTarget){
+            return e.relatedTarget; //如果支持 relatedTarget，表示 W3C
+        }
+    }
+
+    //阻止默认事件
+    function preDef(evt){
+        var e = evt || window.event;
+        if(e.preventDefault){
+            e.preventDefault();
+        }else{
+            e.returnValue = false;
+        }
+    }
+
+
+
+</script>
+</body>
+</html>

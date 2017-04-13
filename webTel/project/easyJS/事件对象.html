@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件对象</title>
+</head>
+<body>
+<script>
+    //跨浏览器鼠标按钮 W3C：左键0 ，中键1 ，右键2    IE 左键1 ，中键4 ，右键2
+    function getButton(ev){
+        var e = ev || window.event;
+        if(evt){
+            return e.button;
+        }else if(window.event){
+            switch(e.button){
+                case 1:
+                    return 0;
+                case 4:
+                    return 1;
+                case 2:
+                    return 2;
+                case 0:
+                    return 0;
+            }
+        }
+    }
+
+    document.onmouseup = function (evt) { //调用
+        if (getButton(evt) == 0) {
+            alert('按下了左键！');
+        } else if (getButton(evt) == 1) {
+            alert('按下了中键！');
+        } else if (getButton(evt) == 2) {
+            alert('按下了右键！' );
+        }
+    };
+
+    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+/*
+    修改键属性
+    属性 说明
+    shiftKey 判断是否按下了 Shfit 键
+    ctrlKey 判断是否按下了 ctrlKey 键
+    altKey 判断是否按下了 alt 键
+    metaKey 判断是否按下了 windows 键，IE 不支持
+ */
+    // 获取key值
+    function getKey(evt) {
+        var e = evt || window.event;
+        var keys = [];
+        if (e.shiftKey) keys.push('shift'); //给数组添加元素
+        if (e.ctrlKey) keys.push('ctrl');
+        if (e.altKey) keys.push('alt');
+        return keys;
+    }
+     // 返回键值 //所有浏览器都支持字符按键 keypress 兼容
+    function getCharCode(evt) {
+        var e = evt || window.event;
+        if (typeof e.charCode == 'number') {  // FirFox chrome
+            return e.charCode;
+        } else {
+            return e.keyCode;     // IE opera
+        }
+    }
+    //  可以使用 String.fromCharCode()将 ASCII 编码转换成实际的字符。
+    //兼容得到事件目标 DOM 对象   //你点击哪里，就可以得到哪里的DOM元素对象
+    function getTarget(ev){
+        var e = ev || window.event;
+        return e.target || e.srcElement;
+    }
+    // e.target.tagName 获取目标元素的元素节点名
+
+
+   // 在阻止冒泡
+    function stopPro(evt) {
+        var e = evt || window.event;
+        window.event ? e.cancelBubble = true : e.stopPropagation();
+    }
+
+
+
+</script>
+</body>
+</html>

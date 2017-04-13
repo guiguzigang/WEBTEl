@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>滑动菜单</title>
+<style>
+	#div1 {width:100px; height:100px; background:red; position:absolute;}
+div {width:3px; height:3px; position:absolute; background:black;}
+	
+</style>
+<script>
+	window.onload = function () {
+		var oDiv = document.getElementById('div1'),
+			lastX = 0,
+			lastY = 0;
+			
+		oDiv.onmousedown = function(ev){
+			var e = ev || window.event,
+				disX = e.clientX - this.offsetLeft,
+				disY = e.clientY - this.offsetTop;
+				console.log(this);
+			document.onmousemove = function(ev){
+				var e = ev || window.event,
+					l = e.clientX - disX,
+					t = e.clientY - disY;
+					
+				oDiv.style.left = l + 'px';
+				oDiv.style.top = t + 'px';
+				
+				iSpeedX = l - lastX;
+				iSpeedY = t - lastY;
+				
+				lastX = l;
+				lasty = t;
+				
+				document.title='x:'+iSpeedX+', y:'+iSpeedY;
+			};
+
+			document.onmouseup = function (){
+				document.onmousemove = null;
+				document.onmouseup = null;
+				startMove(oDiv);
+			};
+			clearInterval(timer);
+		};
+		
+	};
+	var iSpeedX=0,
+		iSpeedY=0,
+		timer=null;
+	function startMove(obj){
+		clearInterval(timer);
+		timer = setInterval(function(){
+			iSpeedY += 3; // 重力加速度
+			var l = obj.offsetLeft + iSpeedX;
+				t = obj.offsetTop + iSpeedY,
+				cliW = document.documentElement.clientWidth,
+				cliH = document.documentElement.clientHeight,
+				w = cliW - obj.offsetWidth,
+				h = cliH - obj.offsetHeight; // 可视区高度 - 自身高度，就是Y轴移动的最大值
+				
+				console.log('l'+ l + 't'+ t + 'h' + h  + 'w' + w);
+			if(t >= h ){ 
+				iSpeedY *= -0.8; // 往上走
+				iSpeedX *= 0.8;
+				t = h; // 超出部分，强行拉回
+			} else if(t <= 0){
+				iSpeedY *= -1; 
+				iSpeedX *= 0.8;
+				t = 0; // 超出部分，强行拉回
+			}
+			if(l >= w){
+				iSpeedX *= -0.8;
+				l = w;// 超出部分，强行拉回
+			} else if(l <=0 ){
+				iSpeedX *= -0.8;
+				l = 0;
+			}
+			
+			if(Math.abs(iSpeedX) < 1){
+				iSpeedX = 0;
+			}
+			if(Math.abs(iSpeedY) < 1){
+				iSpeedY = 0;
+			}
+			
+			if(iSpeedY == 0 && iSpeedX == 0 && t == h){
+				clearInterval(timer);
+			} else {
+				obj.style.left = l + 'px';
+				obj.style.top = t + 'px';
+			}
+			document.title=iSpeedX;
+		}, 30);
+	}
+	
+	
+	
+	
+</script>
+</head>
+
+<body>
+	<input type="button" value="开始运动" onclick="startMove()" />
+	<div id="div1"></div>
+</body>
+</html>

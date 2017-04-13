@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>监控属性</title>
+</head>
+<body>
+	<div id="idName">
+		this name is <span data-bind="text: personName"></span>;<br/>
+		age is <span data-bind="text: personAge"></span><br/>
+		this fullName is <span data-bind="text: fullName"></span><br/>
+		<p>Frist Name: <span data-bind="text: firstName"></span></p>
+		<p>Last Name: <span data-bind="text: lastName"></span></p>
+		<p>Hello,<input data-bind="value: fullName"/>!</p>
+		<p>Enter bid price: <input type="text" data-bind="value: formattedPrice"></p>
+		<p>Show price: <span data-bind="text: formattedPrice"></span></p>
+	</div>
+		this name is <span data-bind="text: personName"></span>
+	<script type="text/javascript" src="js/knockout.js"></script>
+	<script type="text/javascript">
+	var viewModel = {
+		personName: ko.observable('Gavin'),
+		personAge: ko.observable(123),
+		firstName: ko.observable('Qin'),
+		lastName: ko.observable('Ju'),
+		price: ko.observable(342),
+		/*fullName: ko.dependentObservable(function() {
+			return this.firstName + " " + this.lastName;
+		})*/
+	};
+	viewModel.fullName = ko.dependentObservable(function (){
+		return this.firstName() + " " + this.lastName();
+	}, viewModel);
+
+	viewModel.fullName2 = ko.dependentObservable({
+		read: function(){
+			return this.firstName() + " " + this.lastName();
+		},
+		write: function(){
+			var lastSpacePos = value.lastIndexOf(" ");
+			if(lastSpacePos > 0){
+				this.firstName(value.slice(0, lastSpacePos));
+				this.lastName(value.slice(lastSpacePos + 1));
+			}
+		},
+		owner: viewModel
+	});
+
+	viewModel.formattedPrice = ko.dependentObservable({
+		read: function(){
+			return "$" + this.price().toFixed(2);
+		},
+		write: function(){
+			value = parseFloat(value.replace(/[^\.\d]/g, ""));
+			this.price(isNaN(value) ? 0 : value);
+		},
+		owner: viewModel
+	});
+	ko.applyBindings(viewModel, document.getElementById("idName"));
+
+
+	/*
+	console.log(viewModel.personName());   //读取监控属性（observable）的值
+	console.log(viewModel.personName("Bill")); //写一个新值到监控属性（observable）上
+	console.log(viewModel.personName("Bill").personAge(20));
+	依赖链: 1.监控属性items表述一组列表项
+	2.监控属性selectedIndexes保存着被用户选上的列表项的索引
+	3.依赖监控属性selectedItems 返回的是selectedIndexes 对应的列表项数组
+	4.另一个依赖监控属性返回的true或false依赖于 selectedItems的各个列表项是否包含一些属性（例如，是否新的或者还未保存的）。一些UI element（像按钮的启用/禁用）的状态取决于这个值）
+
+	*/
+
+
+	</script>
+</body>
+</html>

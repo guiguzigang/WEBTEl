@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cookie</title>
+</head>
+<body>
+<script>
+    /*
+    设置cookie
+    name 用户名  value name的值 必须，后面为可选参数
+    expires 过期时间
+    path  设置路径，如果只有设置的那个路径文件才可以访问 cookie。
+    domain=domain 访问域名，用于限制只有设置的域名才可以访问，那么没有设置，会
+     默认限制为创建 cookie 的域名。
+    secure 指定必须通过https来通信访问，仅限加密连接，安全性更好，没设置，则任意类型的连接。
+     */
+    function setCookie(name,value,expires,path,domain,secure){
+        var cookieText = encodeURIComponent(name) + '=' + encodeURIComponent(value)
+        if(expires){
+            cookieText += ';expires=' + expires;
+        }
+        if(path){
+            cookieText += ';path=' + path;
+        }
+        if(domain){
+            cookieText += ';domain' + domain;
+        }
+        if(secure){
+            cookieText += ';secure';
+        }
+        document.cookie = cookieText;
+    }
+
+    //过期时间 过多久失效 传递一个天数，表示多少天后失效
+    function setCookieDate(day){
+        if(typeof day == 'number' && day>0){
+            var date = new Date();
+            date.setDate(date.getDate() + day);
+        }else{
+            throw new Error('传递的day必须是一个天数，且必须比0大');
+        }
+        return date;
+    }
+    //获取cookie  name 传入要获取的cookie的name
+    function getCookie(name){
+        var cookieName = encodeURIComponent(name) + '=';               // name 包含 =
+        var cookieStart = document.cookie.indexOf(cookieName);   // 获取name 在cookie中的下标
+        var cookieValue = null;
+        if(cookieStart > -1){                                          // 如果 name 存在
+            var cookieEnd = document.cookie.indexOf(';' , cookieStart); // 获取从name 开始后 第一次出现 ；的下标 即name 的value 最后一个字符的下标
+            if(cookieEnd == -1){                                        // 如果不存在
+                cookieEnd = document.cookie.length;                     // 那么cookieEnd 就是cookie 的长度
+            }
+            // 将就获取的value值转码截取给cookieValue  value值即为 = 后面的值
+            cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length , cookieEnd));
+        }
+        return cookieValue;
+    }
+</script>
+</body>
+</html>

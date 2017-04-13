@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+	<script src="jquery-1.8.3.min.js"></script>
+</head>
+<body>
+	<input type="text"/>
+
+<script>
+/*
+    $('input').click(function(){
+		alert('模拟操作！');
+    });
+	//模拟用户操作
+	$('input').trigger('click');
+	
+	//简写
+	$('input').click(function(){
+		alert('模拟操作！');
+    }).trigger('click');
+	
+	$('input').click(function () {
+		alert('我的第一次点击来自模拟！');
+	}).click();  //空的 click()执行的是 trigger()
+	
+*/
+	
+	$('input').click(function(e,data1,data2,data3){
+		alert(data1 + '|' +data2 + '|' + data3);
+    }).trigger('click',['aaa',['123','abc'],{'age':'100'}]);   //trigger 额外数据，只有一条数据，可以省略中括号，多条不能省略 ，否则第二条过后就无法识别
+	
+
+</script>
+</body>
+</html>

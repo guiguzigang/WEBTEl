@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
+    <title>透明度</title>
+	<style>
+		.move {
+			width : 200px;
+			height: 200px;
+			background: red;
+			filter : alpha(opacity = 30);
+			opacity : 0.3;
+		}
+		
+ 	</style>
+</head>
+<body>
+	<div class="move"></div>
+	<script>
+		window.onload = function () {
+			var moveDiv = document.getElementsByClassName('move')[0];
+			var timer = null; 
+			var alpha = 30;
+			function startMove(iTarget){
+				clearInterval(timer); // 解决多次点击开启多个定时器
+				timer = setInterval(function(){
+					var speed = alpha < iTarget ? 3 : -3;
+					if( Math.abs(alpha - iTarget) < Math.abs(speed) ){ 
+						clearInterval(timer);
+						moveDiv.style.filter = iTarget ;
+						moveDiv.style.opacity = iTarget/100;
+					} else { // 解决到达终点后，点击按钮还会动
+						alpha += speed;
+						moveDiv.style.filter = 'alpha(opacity=' + alpha + ')';
+						moveDiv.style.opacity = alpha/100;
+					}
+				}, 30);
+			}
+			moveDiv.onmouseover = function() {
+				startMove(100);
+			};
+			moveDiv.onmouseout = function() {
+				startMove(30);
+			};
+		};
+	</script>
+</body>
+</html>

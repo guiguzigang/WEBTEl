@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#div1 {width:100px; height:100px; background:red; position:absolute;}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>封装拖拽</title>
+<script src="../jquery-1.8.3.min.js"></script>
+<script>
+	$.fn.extend({
+		drag : function(){
+			var disX = 0,
+				disY = 0,
+				_this = this; // 这里this指的是添加事件的DOM对象
+			this.mousedown(function(e){
+				disX = e.pageX - $(this).offset().left;
+				disY = e.pageY - $(this).offset().top;
+				$(document).mousemove(function(e){
+					$(_this).css({'left' : e.pageX - disX ,
+								  'top' : e.pageY - disY});
+				});
+				$(document).mouseup(function(e){
+					$(this).off();
+					setCookie("x", $(_this).offset().left, 1);
+					setCookie("y", $(_this).offset().top, 1);
+				});
+				return false;
+			});
+		}
+	});
+	
+	$(function(){
+		var x = getCookie("x") || 0,
+			y = getCookie("y") || 0;
+		if(x != 0){
+			$("#div1").css({'left': x + 'px', 'top': y + 'px'});
+		}
+		$("#div1").drag();
+		
+		//console.log($("#div1").offset().top + x + y);
+	});
+	function setCookie(name, value, expires){
+		var date = new Date();
+		date = expires == null ? "" : date.setDate(date.getDate() + expires);
+		document.cookie = name + '=' + value + ';expires=' + date;
+	}
+	function getCookie(name){
+		var arr = document.cookie.split('; ');
+		var i = 0;
+		var a = [];
+		for(i=0; i<arr.length; i++){
+			a = arr[i].split('=');
+			if(a[0] == name){
+				return a[1];
+			}
+		}
+		return '';
+	}
+	function removeCookie(name){
+		setCookie(name, '', -1);
+	}
+	
+	
+	
+</script>
+</head>
+
+<body>
+
+<div id="div1"></div>
+</body>
+</html>

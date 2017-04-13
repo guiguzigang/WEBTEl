@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function filterSpaceNode(nodes) {
+        var ret = []; //新数组
+        for (var i = 0; i < nodes.length; i ++) {
+//如果识别到空白文本节点，就不添加数组
+            if (nodes[i].nodeType == 3 && /^\s+$/.test(nodes[i].nodeValue)) continue;
+//把每次的元素节点，添加到数组里
+            ret.push(nodes[i]);
+        }
+        return ret;
+    }
+    //PS：上面的方法，采用的忽略空白文件节点的方法，把得到元素节点累加到数组里返回。那么还有一种做法是，直接删除空位文件节点即可。
+    function removeSpaceNode(nodes) {
+        for (var i = 0; i < nodes.length; i ++) {
+            if (nodes[i].nodeType == 3 && /^\s+$/.test(nodes[i].nodeValue)) {
+//得到空白节点之后，移到父节点上，删除子节点
+                nodes[i].parentNode.removeChild(nodes[i]);
+            }
+        }
+        return nodes;
+    }
+    //PS：如果 firstChild、lastChild、previousSibling 和 nextSibling 在获取节点的过程中遇到空白节点，我们该怎么处理掉呢？
+    function removeWhiteNode(nodes) {
+        for (var i = 0; i < nodes.childNodes.length; i ++) {
+            if (nodes.childNodes[i].nodeType === 3 &&
+                    /^\s+$/.test(nodes.childNodes[i].nodeValue)) {
+                nodes.childNodes[i].parentNode.removeChild(nodes.childNodes[i]);
+            }
+        }
+        return nodes;
+    }
+
+
+
+
+
+</script>
+</body>
+</html>

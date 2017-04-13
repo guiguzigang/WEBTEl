@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajax</title>
+</head>
+<body>
+    Ajax
+
+    <script>
+        // 兼容IE6以下版本 实例化 XMLHttpRequest 对象
+        function createXHR(){
+            if(typeof XMLHttpRequest != 'undefined'){
+                return new XMLHttpRequest();
+            }else if(typeof ActiveXObject != 'undefined'){
+                var version = [
+                            'MSXML2.XMLHttp.6.0',
+                            'MSXML2.XMLHttp.3.0',
+                            'MSXML2.XMLHttp'
+                ];
+                for(var i=0; i<version.length ; i++){
+                    try{
+                        return new ActiveXObject(version[i]);
+                    }catch(e){
+                        //跳过
+                    }
+                }
+            }else{
+                throw new Error('您的系统或浏览器不支持XHR对象！');
+            }
+        }
+
+        var xhr =createXHR();
+        alert(xhr);
+        //在使用 XHR 对象时，先必须调用 open()方法，它接受三个参数：要发送的请求类型(get 、post)、请求的 URL 和表示是否异步。
+        xhr.open('get', 'demo.php', false); //对于 demo.php 的 get 请求，false 同步
+
+       // open()方法并不会真正发送请求，而只是启动一个请求以备发送。通过 send()方法进行发送请求，send()方法接受一个参数，作为请求主体发送的数据。如果不需要则,即get方式发送，必须填 null 。
+        xhr.send(null);
+        alert(xhr.responseText);
+    </script>
+</body>
+</html>

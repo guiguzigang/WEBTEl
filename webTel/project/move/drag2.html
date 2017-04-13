@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>完美拖拽</title>
+    <style>
+        div {
+            width: 150px;
+            height: 150px;
+            background-color: #666;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -75px;
+            margin-top: -75px;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+        $(function(){
+            $("div").drag();
+        });
+        /*
+         * 完美拖拽
+         */
+        $.fn.drag = function (p) {
+            var d = {
+                    // 父元素
+                    parent : $(document),
+                    // 子元素
+                    child : $(this),
+                    // 是否允许超出父元素
+                    isBeyond : false
+                },
+                o = $.extend(d, p || {}),
+                isMove = false,
+                d = $(this),
+                DW = $(window).outerWidth() - d.outerWidth(),
+                DH = $(window).outerHeight() - d.outerHeight(),
+                X = Y = XMove = YMove = 0
+            ;
+            // 鼠标按下，激活拖拽
+            o.child.mousedown(function(e) {
+                isMove = true;
+                X = e.clientX - d.offset().left;
+                Y = e.clientY - d.offset().top;
+                d.css({
+                    "position": "absolute",
+                    "z-index" : "10"
+                });
+            });
+            // 激活拖拽
+            o.parent.mousemove(function(e) {
+                if(!isMove) return;
+                XMove = e.clientX - X;
+                YMove = e.clientY - Y;
+                if(!o.isBeyond) {
+                    XMove = XMove >= 0 ? XMove : 0;
+                    XMove = DW >= XMove ? XMove : DW;
+                    YMove = YMove >= 0 ? YMove : 0;
+                    YMove = DH >= YMove ? YMove : DH;
+                }
+                d.css({
+                    "left" : XMove,
+                    "top" : YMove,
+                    "margin-top" : 0,
+                    "margin-left" : 0
+                });
+                return false;
+            });
+            // 松开鼠标，拖拽结束
+            o.child.mouseup(function (e) {
+                isMove = false;
+            });
+        }
+    </script>
+</body>
+</html>

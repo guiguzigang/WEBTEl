@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
+    <title>匀速运动</title>
+	<style>
+		.move {
+			width : 100px;
+			height: 100px;
+			background: red;
+			position: absolute;
+		}
+		.pole {
+			width: 1px;
+			height: 300px;
+			position: absolute;
+			left: 400px;
+			top: 0;
+			background-color: #000;
+		}
+ 	</style>
+</head>
+<body>
+	<button id="btn">开始运动</button></br></br>
+	<div class="move"></div>
+	<div class="pole"></div>
+	<script>
+		window.onload = function () {
+			var moveDiv = document.getElementsByClassName('move')[0];
+			var btn = document.getElementById('btn');
+			var timer = null; 
+			btn.onclick = function(){
+				clearInterval(timer); // 解决多次点击开启多个定时器
+				timer = setInterval( startMove, 30, 400);  // ecma5 加入 兼容性有问题，setInterval()方法可以接收三个参数，此参数会作为参数传递给第一个函数参数
+			}
+			function startMove(iTarget){
+				var speed = moveDiv.offsetLeft < iTarget ? 7 : -7;
+				/*
+					当运动到距离目标位置(iTarget)小于速度（speed），也就是不足以做一次运动的时候，停止运动;
+					并强行将left值设为目标位置
+					Math.abs返回绝对值，
+				*/
+				if( Math.abs(moveDiv.offsetLeft - iTarget) < Math.abs(speed) ){ 
+					clearInterval(timer);
+					moveDiv.style.left = iTarget + 'px';
+				} else { // 解决到达终点后，点击按钮还会动
+					moveDiv.style.left = moveDiv.offsetLeft + speed + 'px';
+				}
+			}
+		};
+	</script>
+</body>
+</html>

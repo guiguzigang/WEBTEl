@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>声明式渲染</title>
+</head>
+<body>
+	<h2>声明式渲染</h2>
+	<div id="app">
+		{{ message }}
+	</div>
+	<div id="app2">
+		<span v-bind:title="message">
+			Hover your mouse over me for a few a few seconds to see my dynamically bound title!
+		</span>
+	</div>
+	
+	<h2>条件与循环</h2>
+	<div id="app3">
+		<p v-if="seen">Now you see me</p>
+	</div>
+	<div id="app4">
+		<ol>
+			<li v-for="todo in todos">
+				{{ todo.text }}
+			</li>
+		</ol>
+	</div>
+	
+	<h2>处理用户输入</h2>
+	<div id="app5">
+		<p>{{ message }}</p>
+		<button v-on:click="reverseMessage">Reverse Message</button>
+	</div>
+	<div id="app6">
+		<p>{{ message }}</p>
+		<input type="text" v-model="message">
+	</div>
+	
+	<h2>用组件构建（应用）</h2>
+	<div id="app7">
+		<ol>
+			<todo-item v-for="item in groceryList" v-bind:todo="item"></todo-item>
+		</ol>
+	</div>
+
+
+	<script src="js/vue.js"></script>
+	<script>
+		var app = new Vue({
+			el: "#app",
+			data: {
+				message: "Hello Vue!"
+			}
+		});
+		//浏览器的控制台，并修改 app.message，你将看到上例相应地更新
+		
+		var app2 = new Vue({
+			el: '#app2',
+			data: {
+				message: 'You loaded this page on' + new Date()
+			}
+		});
+		// 浏览器的控制台输入 app2.message = 'some new message'，你就会再一次看到这个绑定了title属性的HTML已经进行了更新。
+		
+		var app3 = new Vue({
+			el: "#app3",
+			data: {
+				seen: 1   // 只要不是null undefined "" 0 NaN都表示true
+			}
+		});
+
+		var app4 = new Vue({
+			el: "#app4",
+			data: {
+				todos: [
+					{text: 'Learn JavaScript'},
+					{text: 'Learn Vue'},
+					{text: 'Build something awesome'},
+				]
+			}
+		});
+		// 在控制台里，输入 app4.todos.push({ text: 'New item' })。你会发现列表中多了一栏新内容。 返回todos的长度
+		
+		var app5 = new Vue({
+			el: "#app5",
+			data: {
+				message: "Hello Vue.js!"
+			},
+			methods: {
+				reverseMessage: function() {
+					this.message = this.message.split('').reverse().join("");
+				}
+			}
+		});
+
+		var app6 = new Vue({
+			el: "#app6",
+			data: {
+				message: "Hello Vue!"
+			}
+		});
+
+		/*Vue.component('todo-item', {
+			//props: ['todo'],
+			template: '<li>This is a todo</li>'
+		});*/
+
+		Vue.component('todo-item', {
+			props: ['todo'],
+			template: '<li>{{ todo.text }}</li>'
+		})
+		var app7 = new Vue({
+			el: '#app7',
+			data: {
+				groceryList: [
+					{ text: 'Vegetables'},
+					{ text: 'Cheese'},
+					{ text: 'Whatever else humans are supposed to eat'}
+				]
+			}
+		});
+	</script>
+</body>
+</html>

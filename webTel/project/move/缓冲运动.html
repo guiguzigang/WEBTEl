@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
+    <title>缓冲运动</title>
+	<style>
+		.move {
+			width : 100px;
+			height: 100px;
+			background: red;
+			position: absolute;
+			left: 0px;
+		}
+		.pole {
+			width: 1px;
+			height: 300px;
+			position: absolute;
+			left: 400px;
+			top: 0;
+			background-color: #000;
+		}
+ 	</style>
+</head>
+<body>
+	<button id="btn">开始运动</button></br></br>
+	<div class="move"></div>
+	<div class="pole"></div>
+	<script>
+		window.onload = function () {
+			var moveDiv = document.getElementsByClassName('move')[0];
+			var btn = document.getElementById('btn');
+			var timer = null; 
+			function startMove(iTarget){
+				clearInterval(timer); // 解决多次点击开启多个定时器
+				timer = setInterval(function(){
+					var speed = (iTarget - moveDiv.offsetLeft) / 20; // 离目标位置越近，速度越小
+					
+					//使小数部分去掉，让div完整显示 
+					speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+					if( moveDiv.offsetLeft == iTarget ){ 
+						clearInterval(timer);
+					} else { // 解决到达终点后，点击按钮还会动
+						moveDiv.style.left = moveDiv.offsetLeft + speed + 'px';
+					}
+				}, 30);
+			}
+			btn.onclick = function() {
+				startMove(400)
+			};
+		};
+	</script>
+</body>
+</html>

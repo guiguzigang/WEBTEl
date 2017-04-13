@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>搜索框</title>
+<style>
+	*{margin: 0; padding: 0;}
+	#search{
+		height: 30px;
+		margin: 10px auto;
+		position: relative;
+		border: 1px solid #ccc;
+	}
+	#search input{
+		width: 420px;
+		height: 30px;
+		outline: none;
+		border: none;
+		padding: 0 8px;
+		float: left;
+	}
+	#search button{
+		width: 80px;
+		height: 30px;
+		background-color: #f60;
+		border: none;
+		float: left;
+	}
+	#keyWordList{
+		position: absolute;
+		top: 30px;
+		left: -1px;
+		border: 1px solid #ccc;
+		display: none;
+	}
+	#keyWordList li{
+		list-style: none;
+	}
+	#keyWordList li a { 
+		line-height: 30px; 
+		padding: 5px; 
+		text-decoration: none; 
+		color: black; 
+		display: block;
+	}
+	#keyWordList li a:hover{ 
+		background: #f90; 
+		color: white;
+	}
+	
+</style>
+<script>
+	window.onload = function () {
+		var search = document.getElementById('search'),
+			txt = search.getElementsByTagName('input')[0],
+			btn = search.getElementsByTagName('button')[0], 
+			wordsList = document.getElementById('keyWordList');
+		search.style.width = (txt.offsetWidth + btn.offsetWidth) + 'px';
+		wordsList.style.width = txt.offsetWidth + 'px';
+		
+		txt.oninput = function(){
+			if(this.value != ''){
+				var oScript = document.createElement('script');
+				oScript.src = 'https://suggest.taobao.com/sug?q=' + this.value +'&callback=gavin';
+				addClass(oScript, 'jsonp');
+				document.body.appendChild(oScript);
+			} else {
+				wordsList.style.display = 'none';
+			}
+		}
+	};
+	function gavin(data){
+		var wordsList = document.getElementById('keyWordList');
+		var html = '';
+		var result = data.result;
+		if(result){
+			wordsList.style.display = 'block';
+			for(var i=0; i<result.length; i++){
+				html += '<li><a target="_blank" href="https://list.tmall.com/search_product.htm?q='+ result[i][0] + '">'+ result[i][0] +'</a></li>';
+			}
+			wordsList.innerHTML = html;
+		} else {
+			wordsList.style.display = 'none';
+		}
+		var script = document.getElementsByTagName('script');
+		for(var i=0; i<script.length; i++ ){
+			if(hasClass(script[i] , 'jsonp')){
+				document.body.removeChild(script[i]);
+				script[i] = null;
+			}
+		}
+		window[gavin] = null;
+        delete window[gavin];// 控制台检测貌似没删除 ？
+	}
+
+	function hasClass(ele , cls){
+		var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+		return ele.className.match(reg);
+	}
+	
+	function removeClass(ele, cls){
+		if(hasClass(ele , cls)){
+			var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+			ele.className = ele.className.replace(reg,'');
+		}
+	}
+	function addClass(ele, cls){
+		if(!this.hasClass(ele, cls)){
+			ele.className += ' ' + cls;
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div id="search">
+		<input type="text" placeholder="请输入"/>
+		<button>搜索</button>
+		<ul id="keyWordList"></ul>
+	</div>
+	<script></script>
+	</br>
+	</br>
+	</br>
+	<p style="width: 50px; height: 50px; transform: rotate(90deg);-webkit-transform: rotate(90deg);">
+	<span style="font-size: 32px; color: red; ">&#8631;</span></p>
+	
+	
+	
+</body>
+</html>

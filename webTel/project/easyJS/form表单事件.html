@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>form表单事件</title>
+</head>
+<body>
+<form action="#">
+    <input type="text" style="ime-mode: disabled" value="node"/>
+    <input type="text" name="a1" placeholder="只能输入1位" maxlength="1">
+    <input type="text" name="a2" placeholder="只能输入3位" maxlength="3">
+    <input type="text" name="a3" placeholder="只能输入5位" maxlength="5">
+</form>
+
+<p id="p"></p>
+
+<script>
+
+
+
+    /*选择部分文本,并移入焦点，实现跨浏览器兼容
+     text 表示表单元素的节点
+     start 表示从第几个位置开始选定文本的下标 第一个位置下标为0
+     end 表示选择文本的最后一个位置的下标
+     */
+    function selectText(text, start ,stop){
+        if(text.setSelectionRange){
+            text.setSelectionRange(start,stop);
+            text.focus();
+        } else if(text.createTextRange){
+            var range = text.createTextRange();    // 创建一个文本范围对象
+            range.collapse(ture);                  // 将指针移动到起点
+            range.moveStart('character',start)     // 移动起点，character 表示逐字移动
+            range.moveEnd('character',stop - start) // 移动终点，character 表示逐字移动  IE 用终点减去起点得到字符数
+            range.select();                       // 焦点选定
+        }
+    }
+
+    var fm = document.getElementsByTagName('form')[0];
+    var p = document.getElementById('p');
+//    fm.elements[0].onselect = function(){
+//        p.innerHTML = getSelectText(fm.elements[0]);
+//    }
+
+    /*
+     获取选择的文本，并返回
+     text 表示表单元素的节点
+    */
+   function getSelectText(text){
+       if(typeof text.selectionStart == 'number'){ // 非IE
+           return text.value.substring(text.selectionStart , text.selectionEnd);
+       }else if(document.selection){
+           return document.selection.createRange().text;    //获取 IE 选择的文本
+       }
+   }
+
+    //跨浏览器添加事件
+    function addEvent(obj, type, fn) {
+        if (obj.addEventListener) {
+            obj.addEventListener(type, fn, false);
+        } else if (obj.attachEvent) {
+            obj.attachEvent('on' + type, function () {
+                fn.call(obj);
+            });
+        }
+    }
+    // 将非数字的文本替换成空
+    addEvent(fm.elements[0], 'keyup', function (evt) { //keyup 弹起的时候
+        this.value = this.value.replace(/[^\d]/g, ''); //把 ^\d非数字都替换成空
+    });
+
+    addEvent(fm.elements['a1'] , 'keyup' ,tabForWord);
+    addEvent(fm.elements['a2'] , 'keyup' ,tabForWord);
+    addEvent(fm.elements['a3'] , 'keyup' ,tabForWord);
+    // 自动跳动光标
+    function tabForWord(evt){
+        var e = evt || window.event;
+        if(this.value.length == this.maxLength){
+            //遍历所有控件
+            for(var i=0;i<fm.elements.length;i++){
+                if(fm.elements[i] == this){
+                    fm.elements[i + 1].focus();
+                    return;
+                }
+            }
+        }
+    }
+
+</script>
+</body>
+</html>
